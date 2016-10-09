@@ -44,15 +44,7 @@ controller: 'lugaresCtrl'
 }
 }
 })
-.state('app.tab.about', {
-    url: '/about',
-    views:{
-    'tab-about':{
-    templateUrl: 'templates/map.html',
-    controller:'mapCtrl'
-}
-}
-})
+
 .state('app.tab.settings', {
     url: '/settings',
     views:{
@@ -99,15 +91,6 @@ controller: 'lugaresCtrl'
     controller:'detallesFavoritoCtrl'
   }
 }
-})
-.state('app.tab.mapa',{
-  url:'/lugares/:aId/mapa',
-  views:{
-    'tab-lugares':{
-      templateUrl:'templates/map.html',
-      controller:'mapCtrlDetail'
-    }
-  }
 })
 ;
 

@@ -35,10 +35,31 @@ angular.module('app.controllers', ['ngCordova'])
 
 ])
 
-.controller('NuevoFavoritoCtrl', function($scope,ComentarioService,$http,$ionicLoading,$window, SeleccionInterna,$ionicPopup,$state,$stateParams){
-   $scope.informacion = SeleccionInterna.getUser();
-   $scope.lugar = SeleccionInterna.getLugarSeleccionado();
-    $scope.estrella='ion-ios-star-outline';
+.controller('NuevoFavoritoCtrl', function($scope,ComentarioService,FavoritoService,$http,$ionicLoading,$window, SeleccionInterna,$ionicPopup,$state,$stateParams){
+
+  $scope.informacion = SeleccionInterna.getUser();
+  var favoritos = [];
+  var ident='';
+  FavoritoService.getAll().then(function(response){
+
+      
+      $scope.lugar = SeleccionInterna.getLugarSeleccionado();
+      $scope.estrella='ion-ios-star-outline';
+
+
+     favoritos = response.data;
+     var tamano = favoritos.length;
+     for(var i=0;i<tamano;i++){
+       var identificador2 = $scope.lugar._id;
+      if(favoritos[i].id_lugar==$scope.lugar._id && favoritos[i].id_user==$scope.informacion.uid){
+        $scope.estrella='ion-ios-star';
+        ident = favoritos[i]._id;
+      }
+
+     }
+    });
+
+
 
 
 $scope.setRating = function() {
@@ -62,25 +83,29 @@ $scope.setRating = function() {
       }else {
           $scope.estrella = 'ion-ios-star-outline';
           var identificador = $stateParams.aId;
-          var identificador2 = $scope.lugar._id;
+          
           //$scope.delete = function(){
             console.log("entre a la delete");
             console.log("borre",identificador);
-            console.log("borre2",identificador2);
-            var base='https://cultural-api.herokuapp.com/api/Favoritos/';
+            
+            var base='https://cultural-api.herokuapp.com/api/Favoritos/'+ident;
             //aca
               $http({
         method : 'delete',
-        url : 'https://cultural-api.herokuapp.com/api/Favoritos/5760d15a2aba48030035d0cd',
-        data :{
-            id_user:$scope.informacion.uid,
-            id_lugar:$scope.lugar._id,
-            title:$scope.lugar.title,
-            image:$scope.lugar.image
-           }
+        url : base
         }).success(function(data) {
             console.log(data);
         });
+
+        /*var borrr = "https://cultural-api.herokuapp.com/api/Comentarios/57f9acfc89ed030300ae021b";
+        console.log("intentando borrar comentario");
+                $http({
+        method : 'delete',
+        url : 'https://cultural-api.herokuapp.com/api/Comentarios/585b368f61ac040400beb426'
+        
+        }).success(function(data) {
+            console.log(data);
+        });*/
 
 
         /*$http({
@@ -150,7 +175,6 @@ $scope.$on('$ionicView.enter', function() {
     $scope.favoritos = response.data;
   });
 });
-
   $scope.selectFavorito=function(favorito){
     SeleccionInterna.setLugarSeleccionado(favorito);
   };
